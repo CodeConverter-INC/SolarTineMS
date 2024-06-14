@@ -1,0 +1,36 @@
+name: Analyze SolarTineMS Repository
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  checkout:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: breakcraft/SolarTineMS
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+          pip install pandas
+
+      - name: Analyze Repository Structure
+        run: |
+          python -m script.analyze_structure
+
+      - name: Analyze Commits
+        run: |
+          python -m script.analyze_commits
