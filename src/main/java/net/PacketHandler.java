@@ -1,30 +1,15 @@
-/*
-	This file is part of the OdinMS Maple Story Server
-    Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc>
-		       Matthias Butz <matze@odinms.de>
-		       Jan Christian Meyer <vimes@odinms.de>
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as
-    published by the Free Software Foundation version 3 as published by
-    the Free Software Foundation. You may not use, modify or distribute
-    this program under any other version of the GNU Affero General Public
-    License.
+public class PacketHandler {
+    private static final Logger logger = Logger.getLogger(PacketHandler.class.getName());
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-package net;
-
-import client.Client;
-import net.packet.InPacket;
-
-public interface PacketHandler {
-    void handlePacket(InPacket p, Client c);
-    boolean validateState(Client c);
+    public void handle(String packet) {
+        try {
+            // Process packet
+            logger.info("Processing packet: " + packet);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Failed to process packet", e);
+        }
+    }
 }
