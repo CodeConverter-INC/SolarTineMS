@@ -15,7 +15,7 @@
 
     <developers>
         <developer>
-            <name>Ponk</name>
+            <name>breakcraft</name>
             <email>ponkcode@gmail.com</email>
             <url>https://github.com/breakcraft</url>
             <roles>
@@ -53,8 +53,7 @@
         <!-- Maven plugins -->
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version> <!-- For running unit tests -->
         <maven-jar-plugin.version>3.4.1</maven-jar-plugin.version> <!-- Disabled. (for building thin jar) -->
-        <maven-assembly-plugin.version>3.7.1
-        </maven-assembly-plugin.version> <!-- For packaging the executable fat jar -->
+        <maven-assembly-plugin.version>3.7.1</maven-assembly-plugin.version> <!-- For packaging the executable fat jar -->
 
         <!-- Dependencies -->
         <slf4j-api.version>2.0.13</slf4j-api.version> <!-- Logging facade -->
