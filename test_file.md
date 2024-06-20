@@ -1,1 +1,1 @@
-This is a test file content.
+SolarTineMS - An open source project.
