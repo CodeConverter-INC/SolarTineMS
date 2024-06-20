@@ -16,14 +16,14 @@
     <developers>
         <developer>
             <name>breakcraft</name>
-            <email>ponkcode@gmail.com</email>
+            <email>solarpanels1340@gmail.com</email>
             <url>https://github.com/breakcraft</url>
             <roles>
                 <role>maintainer</role>
                 <role>developer</role>
             </roles>
             <properties>
-                <discord>ponkcode</discord>
+                <discord>breakcraft</discord>
             </properties>
         </developer>
     </developers>
