@@ -44,7 +44,7 @@ Download the [MapleStory v83 Client](https://www.reddit.net/t/MapleStory-V83-Cli
 
 Navigate to the `client/` folder and edit the client configuration to point to your server, bypassing the IP. Use a hex editor (e.g. HdD`) to make the necessary changes.
 
-When the client is ready, start the game using `MapleStory.ex`.
+When the client is ready, start the game using `MapleStory.exe`.
 
 ### Community & Contributions
 
