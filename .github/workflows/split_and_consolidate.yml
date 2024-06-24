@@ -1,0 +1,68 @@
+name: Split and Consolidate File
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  split_and_consolidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Requests Library
+        run: pip install requests
+
+      - name: Retrieve File and Process
+        run: |
+          import requests
+
+          def split_file(content, chunk_size=1024):
+              return [content[i:i + chunk_size] for i in range(0, len(content), chunk_size)]
+
+          def save_chunks(chunks, base_name='chunk'):
+              paths = []
+              for i, chunk in enumerate(chunks):
+                  chunk_path = f'{base_name}_{i+1}.txt'
+                  with open(chunk_path, 'w', encoding='utf-8') as file:
+                      file.write(chunk)
+                  paths.append(chunk_path)
+              return paths
+
+          def consolidate_chunks(chunk_paths, output_path='consolidated.txt'):
+              with open(output_path, 'w', encoding='utf-8') as output_file:
+                  for chunk_path in chunk_paths:
+                      with open(chunk_path, 'r', encoding='utf-8') as chunk_file:
+                          output_file.write(chunk_file.read())
+
+          # URL to access the raw file content directly from GitHub
+          url = "https://raw.githubusercontent.com/breakcraft/SolarTineMS/master/src/main/java/net/server/Server.java"
+
+          # Get the file content
+          response = requests.get(url)
+          file_content = response.text
+
+          # Split the file content into chunks
+          chunks = split_file(file_content, chunk_size=1024)
+
+          # Save each chunk to a separate file
+          chunk_paths = save_chunks(chunks)
+
+          # Output each chunk file path
+          for path in chunk_paths:
+              print(f'Chunk created: {path}')
+
+          # Consolidate chunks into a single file
+          consolidate_chunks(chunk_paths, output_path='Server_Consolidated.java')
+
+          # Output consolidated file path
+          print(f'Consolidated file created: Server_Consolidated.java')
+
+        shell: python
