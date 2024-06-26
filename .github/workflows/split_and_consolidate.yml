@@ -3,31 +3,39 @@ name: Split and Consolidate File
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *' # Runs daily at midnight
 
 jobs:
   split_and_consolidate:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
-      - name: Install Requests Library
+      - name: Install Dependencies
         run: pip install requests
 
-      - name: Retrieve File and Process
+      - name: Retrieve and Process File
         run: |
+          import os
           import requests
 
           def split_file(content, chunk_size=1024):
+              """
+              Split the content into chunks of specified size.
+              """
               return [content[i:i + chunk_size] for i in range(0, len(content), chunk_size)]
 
           def save_chunks(chunks, base_name='chunk'):
+              """
+              Save each chunk to a separate file and return the paths of these files.
+              """
               paths = []
               for i, chunk in enumerate(chunks):
                   chunk_path = f'{base_name}_{i+1}.txt'
@@ -37,32 +45,54 @@ jobs:
               return paths
 
           def consolidate_chunks(chunk_paths, output_path='consolidated.txt'):
+              """
+              Consolidate chunks into a single file.
+              """
               with open(output_path, 'w', encoding='utf-8') as output_file:
                   for chunk_path in chunk_paths:
                       with open(chunk_path, 'r', encoding='utf-8') as chunk_file:
                           output_file.write(chunk_file.read())
 
+          def clean_up_files(file_paths):
+              """
+              Remove temporary files after consolidation.
+              """
+              for file_path in file_paths:
+                  try:
+                      os.remove(file_path)
+                      print(f'Removed temporary file: {file_path}')
+                  except OSError as e:
+                      print(f'Error removing file {file_path}: {e}')
+
           # URL to access the raw file content directly from GitHub
           url = "https://raw.githubusercontent.com/breakcraft/SolarTineMS/master/src/main/java/net/server/Server.java"
 
-          # Get the file content
-          response = requests.get(url)
-          file_content = response.text
+          try:
+              # Get the file content
+              response = requests.get(url)
+              response.raise_for_status()  # Ensure we handle any errors in the request
+              file_content = response.text
 
-          # Split the file content into chunks
-          chunks = split_file(file_content, chunk_size=1024)
+              # Split the file content into chunks
+              chunks = split_file(file_content, chunk_size=1024)
 
-          # Save each chunk to a separate file
-          chunk_paths = save_chunks(chunks)
+              # Save each chunk to a separate file
+              chunk_paths = save_chunks(chunks)
 
-          # Output each chunk file path
-          for path in chunk_paths:
-              print(f'Chunk created: {path}')
+              # Output each chunk file path
+              for path in chunk_paths:
+                  print(f'Chunk created: {path}')
 
-          # Consolidate chunks into a single file
-          consolidate_chunks(chunk_paths, output_path='Server_Consolidated.java')
+              # Consolidate chunks into a single file
+              consolidate_chunks(chunk_paths, output_path='Server_Consolidated.java')
 
-          # Output consolidated file path
-          print(f'Consolidated file created: Server_Consolidated.java')
+              # Output consolidated file path
+              print(f'Consolidated file created: Server_Consolidated.java')
+
+              # Clean up temporary chunk files
+              clean_up_files(chunk_paths)
+
+          except requests.RequestException as e:
+              print(f'Error retrieving file: {e}')
 
         shell: python
