@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   "com.esotericsoftware.yamlbeans" % "yamlbeans" % "1.17",
   "net.jcip" % "jcip-annotations" % "1.0",
   "com.zaxxer" % "HikariCP" % "5.1.0",
-  "mysql" % "mysql-connector-java" % "8.4.0",
+  "mysql" % "mysql-connector-java" % "8.0.32",
   "org.jdbi" % "jdbi3-core" % "3.45.1",
   "io.netty" % "netty-transport" % "4.1.109.Final",
   "io.netty" % "netty-codec" % "4.1.109.Final",
@@ -27,8 +27,8 @@ libraryDependencies ++= Seq(
   "org.mockito" % "mockito-junit-jupiter" % "5.11.0" % Test
 )
 
-fork in run := true
+fork / run := true
+
+Test / testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
 
 scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-encoding", "utf8")
-
-testOptions in Test += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
