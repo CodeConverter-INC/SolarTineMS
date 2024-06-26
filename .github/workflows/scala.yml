@@ -17,6 +17,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: List files
+        run: ls -R
+
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
@@ -28,6 +31,12 @@ jobs:
         uses: olafurpg/setup-scala@v11
         with:
           sbt-version: '1.5.5'
+
+      - name: Verify SBT files
+        run: |
+          if [ ! -f build.sbt ]; then echo "Error: build.sbt not found"; exit 1; fi
+          if [ ! -f project/build.properties ]; then echo "Error: project/build.properties not found"; exit 1; fi
+          if [ ! -d project ]; then echo "Error: project directory not found"; exit 1; fi
 
       - name: Run tests
         run: sbt test
